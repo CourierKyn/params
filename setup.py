@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="params-FranklinLi", # Replace with your own username
-    version="0.0.1",
+    name="params-FranklinLi",  # Replace with your own username
+    version="0.0.2",
     author="Franklin Li",
     author_email="franklin_a_h_p@qq.com",
     description="Command line flags alternative for Jupyter",

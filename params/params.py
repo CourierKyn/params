@@ -36,19 +36,19 @@ def _DEFINE_param(universal: bool, name: str, default, options: list = [], type:
     display(widget)
 
 
-def DEFINE_string(name: str, default):
+def DEFINE_string(name: str, default, help: str = 'for compatibility with tf.flags only'):
     _DEFINE_param(False, name, default, type='Text')
 
 
-def DEFINE_boolean(name: str, default):
+def DEFINE_boolean(name: str, default, help: str = 'for compatibility with tf.flags only'):
     _DEFINE_param(False, name, default, type='Checkbox')
 
 
-def DEFINE_float(name: str, default):
+def DEFINE_float(name: str, default, help: str = 'for compatibility with tf.flags only'):
     _DEFINE_param(False, name, default, type='FloatText')
 
 
-def DEFINE_integer(name: str, default):
+def DEFINE_integer(name: str, default, help: str = 'for compatibility with tf.flags only'):
     _DEFINE_param(False, name, default, type='IntText')
 
 

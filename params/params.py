@@ -8,18 +8,18 @@ def DEFINE(name: str, default, options: list = [], type: str = ''):
 
 def _DEFINE_param(universal: bool, name: str, default, options: list = [], type: str = ''):
     if universal and type == '':
-            if isinstance(default, int):
-                type = 'IntText'
-            if isinstance(default, float):
-                type = 'FloatText'
-            if isinstance(default, bool):
-                type = 'Checkbox'
-            if isinstance(default, list) and default and not options:
-                options = default
-                default = options[0]
-            if options:
-                type = 'Select'
-            type = 'Text' if type == '' else type
+        if isinstance(default, int):
+            type = 'IntText'
+        if isinstance(default, float):
+            type = 'FloatText'
+        if isinstance(default, bool):
+            type = 'Checkbox'
+        if isinstance(default, list) and default and not options:
+            options = default
+            default = options[0]
+        if options:
+            type = 'Select'
+        type = 'Text' if type == '' else type
 
     setattr(PARAMS, name, default)
 
@@ -52,14 +52,14 @@ def DEFINE_integer(name: str, default, help: str = 'for compatibility with tf.fl
     _DEFINE_param(False, name, default, type='IntText')
 
 
-def DEFINE_enum(name: str, default, options: list = []):
+def DEFINE_enum(name: str, default, options: list = [], help: str = 'for compatibility with tf.flags only'):
     if isinstance(default, list) and default and not options:
         options = default
         default = options[0]
     _DEFINE_param(False, name, default, options, type='Select')
 
 
-def DEFINE_multi_enum(name: str, default, options: list = []):
+def DEFINE_multi_enum(name: str, default, options: list = [], help: str = 'for compatibility with tf.flags only'):
     if not isinstance(default, list):
         default = [default]
     _DEFINE_param(False, name, default, options, type='SelectMultiple')

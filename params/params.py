@@ -64,30 +64,30 @@ def _DEFINE_param(universal: bool, name: str, default, options: list = [], type:
     display(widget)
 
 
-def DEFINE_string(name: str, default, **args):
+def DEFINE_string(name: str, default, help: str = 'for compatibility with absl.flags only', **args):
     _DEFINE_param(False, name, default, type='Text')
 
 
-def DEFINE_boolean(name: str, default, **args):
+def DEFINE_boolean(name: str, default, help: str = 'for compatibility with absl.flags only', **args):
     _DEFINE_param(False, name, default, type='Checkbox')
 
 
-def DEFINE_float(name: str, default, **args):
+def DEFINE_float(name: str, default, help: str = 'for compatibility with absl.flags only', **args):
     _DEFINE_param(False, name, default, type='FloatText')
 
 
-def DEFINE_integer(name: str, default, **args):
+def DEFINE_integer(name: str, default, help: str = 'for compatibility with absl.flags only', **args):
     _DEFINE_param(False, name, default, type='IntText')
 
 
-def DEFINE_enum(name: str, default, options: list = [], **args):
+def DEFINE_enum(name: str, default, options: list = [], help: str = 'for compatibility with absl.flags only', **args):
     if isinstance(default, list) and default and not options:
         options = default
         default = options[0]
     _DEFINE_param(False, name, default, options, type='Select')
 
 
-def DEFINE_multi_enum(name: str, default, options: list = [], **args):
+def DEFINE_multi_enum(name: str, default, options: list = [], help: str = 'for compatibility with absl.flags only', **args):
     if not isinstance(default, list):
         default = [default]
     _DEFINE_param(False, name, default, options, type='SelectMultiple')

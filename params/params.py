@@ -94,7 +94,8 @@ def DEFINE_multi_enum(name: str, default, options: list = [], help: str = 'for c
 
 
 class PARAMS(object):
-    def set_default(self, name, value):
+    @classmethod
+    def set_default(cls, name, value):
         """Changes the default value of the named flag object.
 
         The flag's current value is also updated if the flag is currently using
@@ -105,4 +106,4 @@ class PARAMS(object):
           name: str, the name of the flag to modify.
           value: The new default value.
         """
-        setattr(self, name, value)
+        setattr(cls, name, value)

@@ -51,7 +51,7 @@ with open(_README_PATH, 'rb') as fp:
     LONG_DESCRIPTION = fp.read().decode('utf-8')
 
 setuptools.setup(
-    name='params',
+    name='params-py',
     version='0.2.0',
     description=(
         'Command line flags alternative for Jupyter'),

@@ -55,6 +55,7 @@ def _DEFINE_param(universal: bool, name: str, default, options: list = [], type:
         widget = widgets.Dropdown(value=default, description=name, options=options)
     else:
         widget = eval('widgets.{}(value=default, description=name)'.format(type))
+    PARAMS.widgets[name] = widget
 
     def on_value_change(change):
         setattr(PARAMS, name, change['new'])
@@ -87,13 +88,16 @@ def DEFINE_enum(name: str, default, options: list = [], help: str = 'for compati
     _DEFINE_param(False, name, default, options, type='Select')
 
 
-def DEFINE_multi_enum(name: str, default, options: list = [], help: str = 'for compatibility with absl.flags only', **args):
+def DEFINE_multi_enum(name: str, default, options: list = [], help: str = 'for compatibility with absl.flags only',
+                      **args):
     if not isinstance(default, list):
         default = [default]
     _DEFINE_param(False, name, default, options, type='SelectMultiple')
 
 
 class PARAMS(object):
+    widgets = {}
+
     @classmethod
     def set_default(cls, name, value):
         """Changes the default value of the named flag object.
@@ -106,4 +110,5 @@ class PARAMS(object):
           name: str, the name of the flag to modify.
           value: The new default value.
         """
+        cls.widgets[name].value = value
         setattr(cls, name, value)

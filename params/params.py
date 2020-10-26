@@ -78,6 +78,9 @@ def DEFINE_boolean(name: str, default, help: str = 'for compatibility with absl.
     _DEFINE_param(False, name, default, type='Checkbox')
 
 
+DEFINE_bool = DEFINE_boolean
+
+
 def DEFINE_float(name: str, default, help: str = 'for compatibility with absl.flags only', **args):
     _DEFINE_param(False, name, default, type='FloatText')
 

@@ -71,7 +71,7 @@ print('dependency_links: ', dependency_links)
 
 setuptools.setup(
     name='params-py',
-    version='0.2.4',
+    version='0.3.0',
     description=(
         'Command line flags alternative for Jupyter'),
     long_description=LONG_DESCRIPTION,
@@ -85,7 +85,7 @@ setuptools.setup(
     install_requires=INSTALL_REQUIRES,
     dependency_links=dependency_links,
     include_package_data=True,
-    license='Apache 2.0',
+    license='MIT',
     classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',

@@ -1,2 +1,2 @@
 ipywidgets~=7.5.1
-six
+six~=1.15.0

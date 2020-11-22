@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Collection
 
 import ipywidgets as widgets
 from IPython.display import display
@@ -7,7 +7,7 @@ from IPython.display import display
 def DEFINE(  # pylint: disable=invalid-name
         name: str,
         default,
-        options: Iterable = (),
+        options: Collection = (),
         type: str = '',
         multiline: bool = False,
         **args):
@@ -24,10 +24,11 @@ def DEFINE(  # pylint: disable=invalid-name
       default: The default value of the flag.
       **args: dict, the extra keyword args that are passed to Flag __init__.
     """
-    _DEFINE_param(True, name, default, options, type, multiline)
+    _DEFINE_param(True, name, default, options, type, multiline, **args)
 
 
-def _DEFINE_param(universal: bool, name: str, default, options: Iterable = (), type: str = '', multiline: bool = False):
+def _DEFINE_param(universal: bool, name: str, default, options: Collection = (), type: str = '',
+                  multiline: bool = False, **args):
     if universal and not type:
         if multiline:
             type = 'Textarea'
@@ -37,21 +38,25 @@ def _DEFINE_param(universal: bool, name: str, default, options: Iterable = (), t
             type = 'FloatText'
         if isinstance(default, bool):
             type = 'Checkbox'
-        if isinstance(default, Iterable) and default and not options:
+        if isinstance(default, (list, tuple, set)) and default and not options:
             options = default
             default = next(iter(options))
         if options:
-            type = 'Select'
+            if isinstance(default, (list, tuple, set)):
+                type = 'SelectMultiple'
+            else:
+                type = 'Select'
         type = type if type else 'Text'
 
     setattr(PARAMS, name, default)
 
     if type == 'Select':
-        widget = widgets.Dropdown(value=default, description=name, options=[*options])
+        widget = widgets.Dropdown(value=default, description=name, options=[*options], **args)
     elif type == 'SelectMultiple':
-        widget = widgets.SelectMultiple(value=default, description=name, options=[*options])
+        widget = widgets.SelectMultiple(value=[*default], description=name, options=[*options], **args)
     else:
-        widget = eval('widgets.{}(value=default, description=name)'.format(type))
+        widget_cls = eval('widgets.{}'.format(type))
+        widget = widget_cls(value=default, description=name, **args)
     PARAMS.widgets[name] = widget
 
     def on_value_change(change):
@@ -65,46 +70,42 @@ def _DEFINE_param(universal: bool, name: str, default, options: Iterable = (), t
 def DEFINE_string(name: str, default, help: str = 'for compatibility with absl.flags only', multiline: bool = False,
                   **args):
     if multiline:
-        _DEFINE_param(False, name, default, type='Textarea')
+        _DEFINE_param(False, name, default, type='Textarea', **args)
     else:
-        _DEFINE_param(False, name, default, type='Text')
+        _DEFINE_param(False, name, default, type='Text', **args)
 
 
 def DEFINE_text(name: str, default, help: str = 'for compatibility with absl.flags only', **args):
-    DEFINE_string(name, default, multiline=True)
+    DEFINE_string(name, default, multiline=True, **args)
 
 
 def DEFINE_boolean(name: str, default, help: str = 'for compatibility with absl.flags only', **args):
-    _DEFINE_param(False, name, default, type='Checkbox')
+    _DEFINE_param(False, name, default, type='Checkbox', **args)
 
 
 DEFINE_bool = DEFINE_boolean
 
 
 def DEFINE_float(name: str, default, help: str = 'for compatibility with absl.flags only', **args):
-    _DEFINE_param(False, name, default, type='FloatText')
+    _DEFINE_param(False, name, default, type='FloatText', **args)
 
 
 def DEFINE_integer(name: str, default, help: str = 'for compatibility with absl.flags only', **args):
-    _DEFINE_param(False, name, default, type='IntText')
+    _DEFINE_param(False, name, default, type='IntText', **args)
 
 
-def DEFINE_enum(name: str, default, options: Iterable = (), help: str = 'for compatibility with absl.flags only',
+def DEFINE_enum(name: str, default, options: Collection = (), help: str = 'for compatibility with absl.flags only',
                 **args):
-    if isinstance(default, Iterable) and default and not options:
+    if isinstance(default, (list, tuple, set)) and default and not options:
         options = default
         default = next(iter(options))
-    _DEFINE_param(False, name, default, options, type='Select')
+    _DEFINE_param(False, name, default, options, type='Select', **args)
 
 
-def DEFINE_multi_enum(name: str, default, options: Iterable = (), help: str = 'for compatibility with absl.flags only',
+def DEFINE_multi_enum(name: str, default: Collection, options: Collection,
+                      help: str = 'for compatibility with absl.flags only',
                       **args):
-    if isinstance(default, Iterable) and default and not options:
-        options = default
-        default = next(iter(options))
-    if not isinstance(default, Iterable):
-        default = [default]
-    _DEFINE_param(False, name, default, options, type='SelectMultiple')
+    _DEFINE_param(False, name, default, options, type='SelectMultiple', **args)
 
 
 class PARAMS(object):
@@ -114,9 +115,7 @@ class PARAMS(object):
     def set_default(cls, name, value):
         """Changes the default value of the named flag object.
 
-        The flag's current value is also updated if the flag is currently using
-        the default value, i.e. not specified in the command line, and not set
-        by FLAGS.name = value.
+        The flag's current value is also updated.
 
         Args:
           name: str, the name of the flag to modify.

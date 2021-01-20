@@ -28,7 +28,7 @@ def DEFINE(  # pylint: disable=invalid-name
 
 
 def _DEFINE_param(universal: bool, name: str, default, options: Collection = (), type: str = '',
-                  multiline: bool = False, **args):
+                  multiline: bool = False, **kwargs):
     if universal and not type:
         if multiline:
             type = 'Textarea'
@@ -50,13 +50,15 @@ def _DEFINE_param(universal: bool, name: str, default, options: Collection = (),
 
     setattr(PARAMS, name, default)
 
+    kwargs['layout'] = kwargs.get('layout', widgets.Layout(width='99%'))
+
     if type == 'Select':
-        widget = widgets.Dropdown(value=default, description=name, options=[*options], **args)
+        widget = widgets.Dropdown(value=default, description=name, options=[*options], **kwargs)
     elif type == 'SelectMultiple':
-        widget = widgets.SelectMultiple(value=[*default], description=name, options=[*options], **args)
+        widget = widgets.SelectMultiple(value=[*default], description=name, options=[*options], **kwargs)
     else:
         widget_cls = eval('widgets.{}'.format(type))
-        widget = widget_cls(value=default, description=name, **args)
+        widget = widget_cls(value=default, description=name, **kwargs)
     PARAMS.widgets[name] = widget
 
     def on_value_change(change):

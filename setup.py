@@ -76,8 +76,8 @@ setuptools.setup(
         'Command line flags alternative for Jupyter'),
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
-    author="Franklin Li",
-    author_email="franklin_a_h_p@qq.com",
+    author="Kaiyuan Li",
+    author_email="li.kaiyuan@icloud.com",
     url="https://github.com/CourierKyn/params",
     packages=setuptools.find_packages(exclude=[
         '*.tests', '*.tests.*', 'tests.*', 'tests',
